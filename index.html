@@ -1,0 +1,883 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Drift Daily | Drift Coffee</title>
+  <meta name="description" content="Build a coffee rhythm that fits your week with Drift Daily.">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #241814;
+      --muted: #6f625d;
+      --paper: #f6efe4;
+      --cream: #fffaf1;
+      --line: #dfd0bd;
+      --coffee: #5f3a28;
+      --coffee-dark: #2f1e19;
+      --sage: #2f705d;
+      --sage-light: #dce9df;
+      --berry: #9a4058;
+      --gold: #d99c38;
+      --blue: #385a7c;
+      --shadow: 0 22px 70px rgba(36, 24, 20, 0.16);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(340px, 440px);
+      gap: 0;
+    }
+
+    .main {
+      padding: 28px clamp(20px, 4vw, 64px) 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: 0;
+      color: var(--coffee-dark);
+    }
+
+    .mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--coffee-dark);
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .status {
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 241, 0.75);
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.04fr) minmax(280px, 0.76fr);
+      gap: clamp(24px, 4vw, 54px);
+      align-items: center;
+      min-height: 560px;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--sage);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 780px;
+      color: var(--coffee-dark);
+      font-size: clamp(3rem, 8vw, 6.8rem);
+      line-height: 0.92;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 660px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2vw, 1.28rem);
+    }
+
+    .hero-actions {
+      margin-top: 28px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      min-height: 46px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .btn:focus-visible,
+    .choice:focus-visible,
+    .toggle input:focus-visible + span {
+      outline: 3px solid rgba(47, 112, 93, 0.32);
+      outline-offset: 2px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--coffee-dark);
+      color: white;
+      box-shadow: 0 12px 28px rgba(47, 30, 25, 0.24);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--line);
+      color: var(--coffee-dark);
+    }
+
+    .metrics {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 720px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 241, 0.65);
+      padding: 14px;
+      border-radius: var(--radius);
+      min-height: 96px;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--coffee-dark);
+      font-size: 1.45rem;
+      margin-bottom: 4px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .phone-wrap {
+      display: grid;
+      place-items: center;
+    }
+
+    .phone {
+      width: min(375px, 100%);
+      min-height: 690px;
+      border-radius: 34px;
+      background: #fffaf3;
+      border: 1px solid #eadcc9;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      inset: -120px auto auto -90px;
+      width: 220px;
+      height: 220px;
+      background: rgba(47, 112, 93, 0.12);
+      border-radius: 50%;
+    }
+
+    .phone-ui {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .phone-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 2px 12px;
+    }
+
+    .phone-title {
+      font-weight: 900;
+      color: var(--coffee-dark);
+    }
+
+    .chip {
+      border: 1px solid #d7c8b6;
+      background: #fff;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .app-hero {
+      background: var(--coffee-dark);
+      color: white;
+      border-radius: 22px;
+      padding: 22px;
+    }
+
+    .app-hero h2 {
+      margin: 0 0 8px;
+      font-size: 1.8rem;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .app-hero p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .pickup-card,
+    .drop-card,
+    .explain-card {
+      background: #fff;
+      border: 1px solid #eadcc9;
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .pickup-card strong,
+    .drop-card strong,
+    .explain-card strong {
+      display: block;
+      color: var(--coffee-dark);
+      margin-bottom: 6px;
+    }
+
+    .pickup-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .time {
+      color: var(--sage);
+      font-weight: 900;
+      font-size: 1.4rem;
+    }
+
+    .mini-btn {
+      border: 0;
+      background: var(--sage);
+      color: white;
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font-weight: 800;
+    }
+
+    .section {
+      padding-block: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    .section h2 {
+      margin: 0;
+      color: var(--coffee-dark);
+      font-size: clamp(1.8rem, 3vw, 2.55rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 560px;
+      color: var(--muted);
+    }
+
+    .routine-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(132px, 1fr));
+      gap: 10px;
+    }
+
+    .choice {
+      border: 1px solid var(--line);
+      background: var(--cream);
+      color: var(--coffee-dark);
+      border-radius: var(--radius);
+      padding: 14px;
+      min-height: 116px;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border 0.18s ease, transform 0.18s ease, background 0.18s ease;
+    }
+
+    .choice:hover,
+    .choice.active {
+      border-color: var(--sage);
+      background: #eef5ef;
+      transform: translateY(-1px);
+    }
+
+    .choice b {
+      font-size: 1rem;
+    }
+
+    .choice span {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .recommendations {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .rec {
+      background: var(--cream);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      min-height: 252px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .rec-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tag {
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 0.76rem;
+      font-weight: 900;
+      color: var(--coffee-dark);
+      background: var(--sage-light);
+      white-space: nowrap;
+    }
+
+    .rec h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      line-height: 1.08;
+      color: var(--coffee-dark);
+    }
+
+    .rec p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .why {
+      margin-top: auto;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .why b {
+      color: var(--sage);
+    }
+
+    .control-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.8fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .panel {
+      background: var(--coffee-dark);
+      color: white;
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+
+    .panel h3 {
+      margin: 0 0 10px;
+      font-size: 1.35rem;
+      letter-spacing: 0;
+    }
+
+    .panel p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .toggles {
+      background: var(--cream);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      color: var(--coffee-dark);
+      font-weight: 800;
+    }
+
+    .toggle input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .toggle span {
+      width: 48px;
+      height: 28px;
+      border-radius: 999px;
+      background: #d9c7b5;
+      position: relative;
+      flex: 0 0 auto;
+      transition: background 0.18s ease;
+    }
+
+    .toggle span::after {
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      top: 3px;
+      left: 3px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      transition: transform 0.18s ease;
+    }
+
+    .toggle input:checked + span {
+      background: var(--sage);
+    }
+
+    .toggle input:checked + span::after {
+      transform: translateX(20px);
+    }
+
+    .signup {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      background: var(--cream);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+
+    .signup input {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      color: var(--ink);
+      background: white;
+    }
+
+    .notice {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin: 8px 0 0;
+    }
+
+    .side {
+      background: var(--coffee-dark);
+      color: white;
+      min-height: 100vh;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .side h2 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .side p {
+      color: rgba(255, 255, 255, 0.72);
+      margin: 10px 0 0;
+    }
+
+    .drop {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+
+    .drop .label {
+      color: #f1c46c;
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .drop strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 1.4rem;
+      line-height: 1.08;
+    }
+
+    .drop p {
+      margin-top: 10px;
+    }
+
+    .side-footer {
+      display: grid;
+      gap: 10px;
+    }
+
+    .side-stat {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+      padding-top: 12px;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .side-stat b {
+      color: white;
+    }
+
+    @media (max-width: 1080px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        position: static;
+        height: auto;
+        min-height: auto;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .hero,
+      .control-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .routine-grid,
+      .recommendations,
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .signup {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: clamp(2.7rem, 16vw, 4.5rem);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <main class="main">
+      <header class="topbar">
+        <div class="brand" aria-label="Drift Coffee">
+          <span class="mark">D</span>
+          <span>Drift Coffee</span>
+        </div>
+        <div class="top-actions">
+          <span class="status">Personalisation is optional</span>
+          <button class="btn btn-secondary" type="button" data-scroll="#controls">Manage preferences</button>
+        </div>
+      </header>
+
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <p class="eyebrow">Introducing Drift Daily</p>
+          <h1 id="hero-title">Build a coffee rhythm that fits your week.</h1>
+          <p class="lead">Choose your routine, set your boundaries, and let Drift suggest useful coffee moments with clear reasons behind every recommendation.</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="button" data-scroll="#routine">Start my routine</button>
+            <button class="btn btn-secondary" type="button" data-scroll="#recommendations">See today's suggestions</button>
+          </div>
+          <div class="metrics" aria-label="Drift Daily feature highlights">
+            <div class="metric">
+              <strong>5</strong>
+              <span>coffee routines to choose from</span>
+            </div>
+            <div class="metric">
+              <strong>1 tap</strong>
+              <span>to save a preferred pickup moment</span>
+            </div>
+            <div class="metric">
+              <strong>Always</strong>
+              <span>clear why a suggestion appears</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-wrap" aria-label="Preview of Drift Daily app">
+          <div class="phone">
+            <div class="phone-ui">
+              <div class="phone-top">
+                <span class="phone-title">Drift Daily</span>
+                <span class="chip">Morning reset</span>
+              </div>
+              <div class="app-hero">
+                <h2>Your calm pickup is ready to plan.</h2>
+                <p>Suggested because you chose quick pickup mornings.</p>
+              </div>
+              <div class="pickup-card">
+                <strong>Docklands Flat White</strong>
+                <p>Your saved oat flat white at your selected store.</p>
+                <div class="pickup-row">
+                  <span class="time">8:35</span>
+                  <button class="mini-btn" type="button">Pre-order</button>
+                </div>
+              </div>
+              <div class="drop-card">
+                <strong>Local Drift Drop</strong>
+                <p>Barista Maya's cardamom cold brew is pouring today.</p>
+              </div>
+              <div class="explain-card">
+                <strong>Why this?</strong>
+                <p>Based on your selected store, oat preference, and quick pickup setting.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="routine">
+        <div class="section-head">
+          <h2>Pick the routine you want Drift to support.</h2>
+          <p>Start simple. Drift Daily only uses the preferences you choose and the orders you make with the app.</p>
+        </div>
+        <div class="routine-grid" role="list" aria-label="Coffee routine choices">
+          <button class="choice active" type="button" role="listitem" data-routine="Morning reset">
+            <b>Morning reset</b>
+            <span>Plan a calmer first coffee.</span>
+          </button>
+          <button class="choice" type="button" role="listitem" data-routine="Quick pickup">
+            <b>Quick pickup</b>
+            <span>Find a reliable collection slot.</span>
+          </button>
+          <button class="choice" type="button" role="listitem" data-routine="Study fuel">
+            <b>Study fuel</b>
+            <span>Save useful campus-day prompts.</span>
+          </button>
+          <button class="choice" type="button" role="listitem" data-routine="Weekend treat">
+            <b>Weekend treat</b>
+            <span>Discover small local drops.</span>
+          </button>
+          <button class="choice" type="button" role="listitem" data-routine="Local discovery">
+            <b>Local discovery</b>
+            <span>Try barista picks near you.</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="section" id="recommendations">
+        <div class="section-head">
+          <h2>Useful suggestions, with the reason visible.</h2>
+          <p>No mystery recommendations. Each card explains which preference shaped it, and you can change that signal whenever you like.</p>
+        </div>
+        <div class="recommendations">
+          <article class="rec">
+            <div class="rec-top">
+              <span class="tag">Pickup</span>
+              <span class="chip">8:35</span>
+            </div>
+            <h3>Save your Docklands oat flat white for tomorrow.</h3>
+            <p>A steady morning slot at your selected store.</p>
+            <div class="why"><b>Why this?</b> You chose quick pickup mornings and saved oat as a preference.</div>
+          </article>
+
+          <article class="rec">
+            <div class="rec-top">
+              <span class="tag">Discovery</span>
+              <span class="chip">Local</span>
+            </div>
+            <h3>Try the small-batch Guatemalan filter.</h3>
+            <p>Available today at your local Drift counter.</p>
+            <div class="why"><b>Why this?</b> You turned on local discovery and follow barista picks.</div>
+          </article>
+
+          <article class="rec">
+            <div class="rec-top">
+              <span class="tag">Comeback</span>
+              <span class="chip">Gentle</span>
+            </div>
+            <h3>Restart with one coffee moment this week.</h3>
+            <p>Choose one day and Drift will keep the reminder light.</p>
+            <div class="why"><b>Why this?</b> You asked for low-frequency reminders, not daily prompts.</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="controls">
+        <div class="section-head">
+          <h2>You control what Drift Daily uses.</h2>
+          <p>Personalisation is there to make ordering easier. You can pause it, change it, or keep using rewards without it.</p>
+        </div>
+        <div class="control-panel">
+          <div class="panel">
+            <h3>Clear by design</h3>
+            <p>Drift Daily does not need sensitive information to be useful. It works from your selected store, saved preferences, app orders, and notification choices.</p>
+          </div>
+          <div class="toggles" aria-label="Personalisation controls">
+            <label class="toggle">Use my saved drink preferences <input type="checkbox" checked><span></span></label>
+            <label class="toggle">Suggest pickup windows <input type="checkbox" checked><span></span></label>
+            <label class="toggle">Show local Drift Drops <input type="checkbox" checked><span></span></label>
+            <label class="toggle">Send gentle reminders <input type="checkbox"><span></span></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="signup-title">
+        <div class="section-head">
+          <h2 id="signup-title">Join the Drift Daily preview.</h2>
+          <p>Save your first routine and get an invite when Drift Daily opens at your local store.</p>
+        </div>
+        <form class="signup">
+          <input type="email" aria-label="Email address" placeholder="Email address">
+          <button class="btn btn-primary" type="submit">Save my routine</button>
+        </form>
+        <p class="notice">Prototype notice: this static preview does not submit the form. In the live app, Drift would ask before using preferences or email for personalisation.</p>
+      </section>
+    </main>
+
+    <aside class="side" aria-label="Local Drift Drop and app promise">
+      <div>
+        <h2>Local coffee, smarter rhythm.</h2>
+        <p>Drift Daily keeps the human feel of your local cafÃ© while making the app useful before you arrive.</p>
+      </div>
+
+      <div class="drop">
+        <span class="label">Today's Drift Drop</span>
+        <strong>Docklands cardamom cold brew</strong>
+        <p>Recommended because you chose local discovery. Hide local drops any time.</p>
+        <button class="btn btn-primary" type="button" data-scroll="#signup-title">Get preview invite</button>
+      </div>
+
+      <div class="side-footer">
+        <div class="side-stat"><span>Recommendations</span><b>Explainable</b></div>
+        <div class="side-stat"><span>Routine prompts</span><b>Optional</b></div>
+        <div class="side-stat"><span>Personal data</span><b>Controlled</b></div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const choices = document.querySelectorAll(".choice");
+    const chip = document.querySelector(".phone-top .chip");
+    const form = document.querySelector(".signup");
+
+    choices.forEach((choice) => {
+      choice.addEventListener("click", () => {
+        choices.forEach((item) => item.classList.remove("active"));
+        choice.classList.add("active");
+        chip.textContent = choice.dataset.routine;
+      });
+    });
+
+    document.querySelectorAll("[data-scroll]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = document.querySelector(button.dataset.scroll);
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const button = form.querySelector("button");
+      button.textContent = "Routine saved";
+      button.disabled = true;
+    });
+  </script>
+</body>
+</html>
+
